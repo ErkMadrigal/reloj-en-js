@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="bootstrap-material-design.min.css">
+    <link rel="stylesheet" href="css/fullcalendar.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-7"><div id="calendarWeb"></div></div>
+            <div class="col"></div>
+        </div>
+    </div>
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="js/fullcalendar.min.js"></script>
+    <script src="js/es.js  "></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap-material-design.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#calendarWeb').fullCalendar({
+            header:{
+                left:'today,prev,next,Miboton',
+                center:'title',
+                right:'month,basicWeek,basicDay,agendaWeek,agendaDay'
+                },
+                customButtons:{
+                    Miboton:{
+                        text:"Boton 1",
+                        click:function(){
+                            alert("Accion del boton");
+                        }
+                    }
+                },
+                dayClick:function(date, jsEvent, view){
+                    $('#txtFecha').val(date.format());
+                    $('#ModalEventos').modal();
+                },
+                        events:'eventos.php',
+                eventClick:function(calEvent,jsEvent,view){
+                    //h2
+                    $('#tituloEvento').html(calEvent.title);
+
+                    //Mostrar la informcion en los inputs
+                    $('#txtDescripcion').val(calEvent.descripcion);
+                    $('#txtID').val(calEvent.id);
+                    $('#txtTitulo').val(calEvent.title);
+                    $('#txtColor').val(calEvent.color);
+                    
+                    FechaHora=calEvent.start._i.split(" ");
+                    $('#txtFecha').val(FechaHora[0]);
+                    $('#txtHora').val(FechaHora[1]);
+
+
+
+                    $('#ModalEventos').modal();
+                }
+                
+            });
+        });
+    </script>
+    <!-- Modal (agregar, modificar, Eliminar)-->
+<div class="modal fade" id="ModalEventos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tituloEvento"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!--form-->
+                    <div class="container-fluid">
+                        <div class="alert alert-success mt-4" id="respuestaCorrectaC" role="alert"></div>
+                        <div class="alert alert-danger" id="respuestaErroneaC"  role="alert"></div>
+                        <form class="calendar" novalidate id="calendar">
+                            <div class="row">
+                                <div class="col-10 mt-3">
+                                    <input required type="text"
+                                        style="background: white;border-radius: 3px; border: 1px solid #bdc7d8;"
+                                        class="form-control" id="txtID" name="txtID"
+                                        placeholder="ID">
+                                    <div class="invalid-tooltip">
+                                        ID
+                                    </div>
+                                </div>
+                                <div class="col-2 mt-3">
+                                        <input required type="color"
+                                            style="background: white;border-radius: 3px; border: 1px solid #bdc7d8;"
+                                            class="form-control" value="#ff0000" id="txtColor" name="txtColor"
+                                            placeholder="color">
+                                        <div class="invalid-tooltip">
+                                            Descripcion
+                                        </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                        <input required type="text"
+                                            style="background: white;border-radius: 3px; border: 1px solid #bdc7d8;"
+                                            class="form-control" id="txtFechaI" name="txtFechaInicio"
+                                            placeholder="Fecha Inicio">
+                                        <div class="invalid-tooltip">
+                                            Fecha inicio
+                                        </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                        <input required type="text"
+                                            style="background: white;border-radius: 3px; border: 1px solid #bdc7d8;"
+                                            class="form-control" id="txtFechaF" name="txtFechaFinal"
+                                            placeholder="Fecha Final">
+                                        <div class="invalid-tooltip">
+                                            Fecha Final
+                                        </div>
+                                </div> 
+                                <div class="col-12 mt-3">
+                                        <input required type="text"
+                                            style="background: white;border-radius: 3px; border: 1px solid #bdc7d8;"
+                                            class="form-control" id="txtTitulo" name="txtTitulo"
+                                            placeholder="Titulo">
+                                        <div class="invalid-tooltip">
+                                            Titulo
+                                        </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                        <input required type="text"
+                                            style="background: white;border-radius: 3px; border: 1px solid #bdc7d8;"
+                                            class="form-control" id="txtHora" name="txtHora" value="10:30"
+                                            placeholder="Hora">
+                                        <div class="invalid-tooltip">
+                                            Hora
+                                        </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                        <input required type="text"
+                                            style="background: white;border-radius: 3px; border: 1px solid #bdc7d8;"
+                                            class="form-control" name="txtDescripcion" id="txtDescripcion"
+                                            placeholder="Descripcion">
+                                        <div class="invalid-tooltip">
+                                            Descripcion
+                                        </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <button type="button" id="btnAgregar" class="btn btn-raised btn-success mt-3">gregar</button>
+                                    <button type="button" id="btnModificar" class="btn btn-raised btn-success mt-3">Modificar</button>
+                                    <button type="button" id="btnBorrar" class="btn  btn-raised btn-danger mt-3">Borrar</button>
+                                    <button type="button" class="btn btn-raised btn-default mt-3 " data-dismiss="modal">Cancelar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                <!--end Form-->
+            </div>
+        </div>
+    </div>
+ </div>
+<script>
+    var NuevoEvento;
+
+$('#btnAgregar').click(function(){
+    RecolectarDatosGUI();
+    EnviarInformacion('agergar',NuevoEvento);
+});
+
+function RecolectarDatosGUI(){
+    NuevoEvento={
+        id:$('#txtID').val(),
+        title:$('#txtTitulo').val(),
+        start:$('#txtFecha').val()+ " " +$('#txtHora').val(),
+        color:$('#txtColor').val(),
+        descripcion:$('#txtDescripcion').val(),
+        textColor:"#fff",
+        end:$('#txtFecha').val()+ " " +$('#txtHora').val(),
+    };
+}
+
+(()=> {
+    'use strict';
+    window.addEventListener('load', () => {
+        const respuestaCorrectaP = document.getElementById('respuestaCorrectaC');
+        const respuestaErroneaP = document.getElementById('respuestaErroneaC');
+        respuestaCorrectaP.style.display = 'none';
+        respuestaErroneaP.style.display = 'none';
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('calendar');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, (form) => {
+            form.addEventListener('submit',  (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                if (form.checkValidity()) {
+                    let dataForm = new FormData(forms[0]);
+                    fetch('evetos.php',{
+                        method : 'POST',
+                        body : dataForm
+                    })
+                    .then((response) => response.json())
+                    .then((data)=>{
+                        console.log(data);
+                        if(data.estado === 'ok'){
+                            respuestaCorrectaP.innerHTML = data.mensaje;
+                            respuestaCorrectaP.style.display = 'block';
+                            respuestaErroneaP.style.display = 'none';
+                            form.reset();
+                            form.classList.remove('was-validated');
+                        }else{
+                            if(data.length !== undefined){
+                                respuestaErroneaP.innerHTML  = '';
+                                data.forEach((res) => {
+                                    respuestaErroneaP.innerHTML += `<p class="mb-0">${res}</p>`;
+                                });
+                            }else{
+                                respuestaErroneaP.innerHTML = data.mensaje;
+                            }
+                            respuestaErroneaP.style.display = 'block';
+                            respuestaCorrectaP.style.display = 'none';
+                        }
+                    })
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+</script>
+</body>
+</html>
